@@ -49,6 +49,13 @@ conda env create -f environment.yml
 conda activate sw
 ```
 ## Inference
+
+### Inference_full_text
+```bash
+python ./inference/inference_full_text.py \
+    --model_path ./ckpt/full_text_sliding_window/epoch_1.pt
+```
+### Inference_Augmetnation
 ```bash
 python ./inference/inference_main.py \
     --model_path /shared/home/kdd/HZ/SW-2025/ckpt/llama \
@@ -59,10 +66,7 @@ python ./inference/inference_main.py \
     --model_path /shared/home/kdd/HZ/SW-2025/ckpt/gemma \
     --output_csv submission_gemma.csv
 ```
-```bash
-python ./inference/inference_full_text.py \
-    --model_path ./ckpt/full_text_sliding_window/epoch_1.pt
-```
+### Inference_sudo_labeling
 ```bash
 python ./inference/inference_main.py \
     --model_path /shared/home/kdd/HZ/SW-2025/ckpt/train_sudo \
@@ -71,15 +75,15 @@ python ./inference/inference_main.py \
 ```bash
 준비중,,,
 ```
-
-
-
-### Inference_full_test
-### Inference_Augmetnation
-### Inference_sudo_labeling
 ### Emsemble
 
 ## Train
+### Data_Augmentation
+### train_full_text
+```bash
+python ./train/train_full_text.py
+```
+### train_Augmentation
 ```bash
 python ./train/train_main.py \
     --train_csv ./data/train_llama.csv \
@@ -91,9 +95,7 @@ python ./train/train_main.py \
     --train_csv ./data/train_gemma.csv \
     --save_dir ./ckpt/gemma
 ```
-```bash
-python ./train/train_full_text.py
-```
+### train_sudo_labeling
 ```bash
 python ./train/train_sudo_labeling.py \
     --train_csv ./data/train_sudo_label.csv \
@@ -102,8 +104,3 @@ python ./train/train_sudo_labeling.py \
 ```bash
 준비중,,,
 ```
-
-### Data_Augmentation
-### train_full_text
-### train_Augmentation
-### train_sudo_labeling
