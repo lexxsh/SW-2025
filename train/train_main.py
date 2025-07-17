@@ -18,9 +18,20 @@ import random
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--train_csv", type=str, default="./data/train_csv", help="Training CSV path")
-parser.add_argument("--save_dir", type=str, default="./ckpt/train_main", help="Checkpoint output dir")
-parser.add_argument("--sampling", type=bool, default=False, help="sampling")
+parser.add_argument(
+    "--train_csv", type=str, default="./data/train_csv", help="Training CSV path"
+)
+parser.add_argument(
+    "--save_dir", type=str, default="./ckpt/train_main", help="Checkpoint output dir"
+)
+parser.add_argument(
+    "--sampling",
+    nargs=2,  # 두 개의 숫자 (pos, neg)
+    type=int,  # 정수형으로 변환
+    default=None,  # 기본값: None (sampling X)
+    metavar=("POS", "NEG"),  # 도움말에 표시할 이름
+    help="Sample sizes: POS NEG",
+)
 args = parser.parse_args()
 
 logging.basicConfig(level=logging.INFO)
@@ -38,15 +49,17 @@ def set_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
+
 set_seed(42)
 
 train = pd.read_csv(args.train_csv, encoding="utf-8-sig")
 
 if args.sampling:
+    pos_count, neg_count = args.sampling
     pos_df = train[train["generated"] == 1]
     neg_df = train[train["generated"] == 0]
-    pos_sample = pos_df.sample(n=40000, random_state=42)
-    neg_sample = neg_df.sample(n=10000, random_state=42)
+    pos_sample = pos_df.sample(n=pos_count, random_state=42)
+    neg_sample = neg_df.sample(n=neg_count, random_state=42)
 
     pos_sents = (pos_sample["title"] + " " + pos_sample["paragraphs"]).tolist()
     neg_sents = (neg_sample["title"] + " " + neg_sample["paragraphs"]).tolist()
@@ -104,7 +117,6 @@ training_args = TrainingArguments(
     num_train_epochs=3,
     weight_decay=0.01,
     metric_for_best_model="AUC",
-    # save_steps=20000,
     save_strategy="epoch",
     save_total_limit=3,
     lr_scheduler_type="cosine",

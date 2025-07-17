@@ -8,6 +8,7 @@ from tqdm import tqdm
 import random
 import numpy as np
 
+
 def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
@@ -23,12 +24,13 @@ batch_size = 16
 lr = 2e-5
 epochs = 3
 max_length = 512
-window_size = 400 
+window_size = 400
 overlap = 100
 
 device_num = 0
 device = torch.device(f"cuda:{device_num}" if torch.cuda.is_available() else "cpu")
 print(f"✅ Using device: {device}")
+
 
 def sliding_window_split(text, tokenizer, window_size=400, overlap=100):
     """텍스트를 슬라이딩 윈도우로 분할"""
@@ -51,6 +53,7 @@ def sliding_window_split(text, tokenizer, window_size=400, overlap=100):
         start += window_size - overlap
 
     return windows
+
 
 class SlidingWindowDataset(Dataset):
     """슬라이딩 윈도우 학습용 데이터셋"""
@@ -93,6 +96,7 @@ class SlidingWindowDataset(Dataset):
         label = torch.tensor(self.labels[idx], dtype=torch.float32)
         return input_ids, attention_mask, label
 
+
 class SimpleClassifier(nn.Module):
     def __init__(self, model_name):
         super().__init__()
@@ -108,6 +112,7 @@ class SimpleClassifier(nn.Module):
         h = self.norm(cls_token)
         h = self.drop(h)
         return self.fc(h).squeeze(-1)
+
 
 def run_epoch(model, dataloader, optimizer, criterion):
     model.train()
@@ -138,11 +143,13 @@ def run_epoch(model, dataloader, optimizer, criterion):
 
     return avg_loss, accuracy
 
+
 def train_sliding_window():
-    print("🚀 RoBERTa-Base 슬라이딩 윈도우 학습 시작!")
+    print("🚀 DeBERTa-Base 슬라이딩 윈도우 학습 시작!")
 
     # 데이터 로드
     df = pd.read_csv(train_csv_path).dropna(subset=["full_text"])
+    
     print(f"✅ Loaded {len(df)} documents")
     print("Document class distribution:")
     print(df["generated"].value_counts())

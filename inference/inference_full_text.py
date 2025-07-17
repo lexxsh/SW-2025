@@ -12,7 +12,11 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", required=True, help="모델 체크포인트(.pt) 경로")
 parser.add_argument("--test_csv", default="./data/test.csv", help="결과 저장 경로")
-parser.add_argument("--output_csv", default="./submission/submission_full_text.csv", help="결과 저장 경로")
+parser.add_argument(
+    "--output_csv",
+    default="./submission/submission_full_text.csv",
+    help="결과 저장 경로",
+)
 args = parser.parse_args()
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -88,10 +92,7 @@ with torch.no_grad():
         all_probs.extend(probs)
 
 # ────────────────────── 7. 제출 파일 저장 ──────────────────────
-sub = pd.read_csv(
-    "/shared/home/kdd/HZ/sw/Z_dataset/sample_submission.csv", encoding="utf-8-sig"
-)
+sub = pd.read_csv("./data/sample_submission.csv", encoding="utf-8-sig")
 sub["generated"] = all_probs
-output_path = f"/shared/home/kdd/HZ/sw/Z_outputs/{args.output_csv}"
-sub.to_csv(output_path, index=False, encoding="utf-8-sig")
-print(f"✅ 결과 저장 완료 → {output_path}")
+sub.to_csv(args.output_csv, index=False, encoding="utf-8-sig")
+print(f"✅ 결과 저장 완료 → {args.output_csv}")
