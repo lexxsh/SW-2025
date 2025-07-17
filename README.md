@@ -15,25 +15,25 @@ ckpt, data 파일은 위의 Pretrained Checkpoint & dataset 섹션에서 다운�
 data_augmentation 코드를 활용하여 데이터 증강을 시도했으며, 완료된 결과 또한 드라이브에 포함되어 있습니다.
 ```bash
 SW-2025/
-├── ckpt/
+├── ckpt/               # weight files
 │   ├── 1.pt
 │   ├── 2.pt
 │   └── 3.pt
-├── data/
+├── data/               # 기존 데이터 & 증강 데이터 
 │   ├── train.csv
 │   ├── train_llama.csv
 │   ├── train_gemma.csv
 │   ├── test.csv
 │   └── sample_submission.csv
-├── data_augmentation/
+├── data_augmentation/  # 데이터 증강 코드
 │   └── augmentation.py
-├── emsemble/
+├── emsemble/           # 앙상블 코드
 │   ├── ensemble_2.py
 │   └── ensemble.py
-├── inference/
+├── inference/          # 추론 코드
 │   ├── inference_full_text.py
 │   └── inference_main.py
-├── train/
+├── train/              # 학습 코드
 │   ├── train_full_text.py
 │   ├── train_main.py
 │   └── train_sudo_labeling.py
