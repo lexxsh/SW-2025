@@ -76,9 +76,15 @@ python ./inference/inference_main.py \
 준비중,,,
 ```
 ### Emsemble
+```bash
+python ./emsemble/ensemble.py --csv_files 1.csv 2.csv --output_csv ensembled.csv
+```
 
 ## Train
 ### Data_Augmentation
+```bash
+python ./data_augmentation/augmentation.py
+```
 ### train_full_text
 ```bash
 python ./train/train_full_text.py
