@@ -73,7 +73,7 @@ python ./inference/inference_main.py \
     --output_csv submission_train_sudo.csv
 ```
 ```bash
-준비중,,,
+python ./inference/inference_custom.py --model_path ./ckpt/train_sudo_custom/
 ```
 ### Emsemble
 ```bash
@@ -84,6 +84,9 @@ python ./emsemble/ensemble.py --csv_files 1.csv 2.csv --output_csv ensembled.csv
 ### Data_Augmentation
 ```bash
 python ./data_augmentation/augmentation.py
+```
+```bash
+준비중,,, (젬마)
 ```
 ### train_full_text
 ```bash
@@ -108,5 +111,5 @@ python ./train/train_sudo_labeling.py \
     --sampling True
 ```
 ```bash
-준비중,,,
+python ./train/train_sudo_labeling_custom.py
 ```
