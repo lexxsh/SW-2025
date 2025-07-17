@@ -58,18 +58,18 @@ python ./inference/inference_full_text.py \
 ### Inference_Augmetnation
 ```bash
 python ./inference/inference_main.py \
-    --model_path /shared/home/kdd/HZ/SW-2025/ckpt/llama \
+    --model_path ./ckpt/llama \
     --output_csv submission_llama.csv
 ```
 ```bash
 python ./inference/inference_main.py \
-    --model_path /shared/home/kdd/HZ/SW-2025/ckpt/gemma \
+    --model_path ./ckpt/gemma \
     --output_csv submission_gemma.csv
 ```
 ### Inference_sudo_labeling
 ```bash
 python ./inference/inference_main.py \
-    --model_path /shared/home/kdd/HZ/SW-2025/ckpt/train_sudo \
+    --model_path ./ckpt/train_sudo \
     --output_csv submission_train_sudo.csv
 ```
 ```bash
