@@ -3,16 +3,16 @@
 ## OpenSource Model
 데이터 증강 & 학습시 사용한 모델은 다음과 같습니다.
 ```bash
-Data Augmentation
+- Data Augmentation
 https://huggingface.co/SEOKDONG/llama3.1_korean_v1.1_sft_by_aidx
 https://huggingface.co/rtzr/ko-gemma-2-9b-it
 
-Train
+- Train
 https://huggingface.co/team-lucid/deberta-v3-base-korean
 ```
 ## Folder Structure
 ckpt, data 파일은 위의 Pretrained Checkpoint & dataset 섹션에서 다운로드 받은후 드라이브 구조와 동일하게 위치하면 됩니다.
-data_augmentation 코드를 활용하여 데이터 증강을 시도했으며, 완료된 결과 또한 드라이브에 포함되어 있습니다.
+data_augmentation 코드를 활용하여 데이터 증강을 진행했으며, 완료된 결과 또한 드라이브에 포함되어 있습니다.
 ```bash
 SW-2025/
 ├── ckpt/               # weight files
@@ -40,7 +40,19 @@ SW-2025/
 └── README.md
 ```
 ## Conda Environmet
+
+라이브러리 버전은 environment.yml에 저장되어 있습니다.
+아래 코드를 순서대로 실행시키면 됩니다.
+
+```bash
+conda env create -f environment.yml
+conda activate sw
+```
 ## Inference
+
+
+
+
 ### Inference_full_test
 ### Inference_Augmetnation
 ### Inference_sudo_labeling
