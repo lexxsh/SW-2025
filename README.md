@@ -71,11 +71,15 @@ chmod +x ./scripts/inference.sh
 - 가장 먼저 학습을 진행하기전, 데이터증강을 위한 코드입니다.
 - 이 과정을 통하여 나온결과는 드라이브에 동일하게 포함되어 있습니다.
 ### Data_Augmentation
-1. llama증강
+1. 문단별로 train 분리하기
+```bash 
+python ./data_augmentation/train_paragraphs.py
+```
+2. llama증강
 ```bash 
 python ./data_augmentation/llama_augmentation.py
 ```
-2. gemma증강
+3. gemma증강
 ```bash
 python ./data_augmentation/gemma_augmentation.py
 ```
