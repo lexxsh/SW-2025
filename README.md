@@ -11,8 +11,8 @@ https://huggingface.co/rtzr/ko-gemma-2-9b-it
 https://huggingface.co/team-lucid/deberta-v3-base-korean
 ```
 ## Folder Structure
-ckpt, data 파일은 위의 Pretrained Checkpoint & dataset 섹션에서 다운로드 받은후 드라이브 구조와 동일하게 위치하면 됩니다.
-data_augmentation 코드를 활용하여 데이터 증강을 진행했으며, 완료된 결과 또한 드라이브에 포함되어 있습니다.
+- ckpt, data 파일은 위의 Pretrained Checkpoint & dataset 섹션에서 다운로드 받은후 드라이브 구조와 동일하게 위치하면 됩니다.
+- data_augmentation 코드를 활용하여 데이터 증강을 진행했으며, 완료된 결과 또한 드라이브에 포함되어 있습니다.
 ```bash
 SW-2025/
 ├── ckpt/               # weight files
@@ -41,8 +41,8 @@ SW-2025/
 ```
 ## Conda Environmet
 
-라이브러리 버전은 requirements에 저장되어 있습니다.
-아래 명령어를 순서대로 실행시키면 됩니다.
+- 라이브러리 버전은 requirements에 저장되어 있습니다.
+- 아래 명령어를 순서대로 실행시키면 됩니다.
 
 ```bash
 conda create -n python=3.10
@@ -66,9 +66,9 @@ chmod +x ./scripts/inference.sh
 
 
 ## Train
-학습과정은 위에서 추론을 5번 한거와 같이 총 5개의 학습을 진행했습니다.
-가장 먼저 학습을 진행하기전, 데이터증강을 위한 코드입니다.
-이 과정을 통하여 나온결과는 드라이브에 동일하게 포함되어 있습니다.
+- 학습과정은 위에서 추론을 5번 한거와 같이 총 5개의 학습을 진행했습니다.
+- 가장 먼저 학습을 진행하기전, 데이터증강을 위한 코드입니다.
+- 이 과정을 통하여 나온결과는 드라이브에 동일하게 포함되어 있습니다.
 ### Data_Augmentation
 1. llama증강
 ```bash 
