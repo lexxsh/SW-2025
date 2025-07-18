@@ -53,7 +53,7 @@ python -m pip install requirements.txt
 1. Inference_full_test
 2. Inference_Augmetnation
 3. Inference_sudo_labeling
-4. Inference_full_test+sudo_labeling
+4. Inference_full_test+sudo_labeling <br>
 위 네가지에 대한 추론진행후 앙상블을 진행하는 파일을 쉘 스크립트를 통해 작성하였습니다.
 아래 명령어를 순서대로 실행시키면 됩니다.
 
@@ -107,5 +107,6 @@ python ./train/train_sudo_labeling.py \
 sliding window를 학습한 모델에 이어서 수도라벨링 데이터셋을 학습하는 코드입니다.
 ```bash
 python ./train/train_sudo_labeling_custom.py \
+    --train_csv ./data/train_sudo_label.csv \
     --save_dir ./ckpt/train_sudo_custom
 ```
