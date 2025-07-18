@@ -60,7 +60,7 @@ def main(args):
     # ID와 최종 결과만 저장
     submission_df = ensemble_df[["ID", "generated"]]
     submission_df.to_csv(
-        f"/shared/home/kdd/HZ/sw/Z_ensembled/{args.output_csv}", index=False
+        f"./submission/{args.output_csv}", index=False
     )
 
     print(f"✅ 4. 앙상블 결과를 저장했습니다 → {args.output_csv}")

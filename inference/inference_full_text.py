@@ -89,9 +89,9 @@ with torch.no_grad():
 
 # ────────────────────── 7. 제출 파일 저장 ──────────────────────
 sub = pd.read_csv(
-    "/shared/home/kdd/HZ/sw/Z_dataset/sample_submission.csv", encoding="utf-8-sig"
+    "./data/sample_submission.csv", encoding="utf-8-sig"
 )
 sub["generated"] = all_probs
-output_path = f"/shared/home/kdd/HZ/sw/Z_outputs/{args.output_csv}"
+output_path = f"./submission/{args.output_csv}"
 sub.to_csv(output_path, index=False, encoding="utf-8-sig")
 print(f"✅ 결과 저장 완료 → {output_path}")

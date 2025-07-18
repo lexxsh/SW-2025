@@ -173,7 +173,7 @@ def train_sliding_window():
     criterion = nn.BCEWithLogitsLoss()
 
     # 저장 디렉토리
-    save_dir = "./ckpt/full_text_sliding_window"
+    save_dir = "./ckpt/full_text"
     os.makedirs(save_dir, exist_ok=True)
 
     print(f"🔥 Training started with {len(train_ds)} windows")

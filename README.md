@@ -41,25 +41,71 @@ SW-2025/
 ```
 ## Conda Environmet
 
-라이브러리 버전은 environment.yml에 저장되어 있습니다.
-아래 코드를 순서대로 실행시키면 됩니다.
+라이브러리 버전은 requirements에 저장되어 있습니다.
+아래 명령어를 순서대로 실행시키면 됩니다.
 
 ```bash
-conda env create -f environment.yml
+conda create -n python=3.10
 conda activate sw
+python -m pip install requirements.txt
 ```
-## Inference
+## Inference & Ensemble
+1. Inference_full_test
+2. Inference_Augmetnation
+3. Inference_sudo_labeling
+4. Inference_full_test+sudo_labeling
+위 네가지에 대한 추론진행후 앙상블을 진행하는 파일을 쉘 스크립트를 통해 작성하였습니다.
+아래 명령어를 순서대로 실행시키면 됩니다.
 
+```bash
+chmod +x ./scripts/inference.sh
+./scripts/inference.sh
+```
 
+이후 최종 결과물은 submission/final_ensemble.csv 에 저장됩니다.
 
-
-### Inference_full_test
-### Inference_Augmetnation
-### Inference_sudo_labeling
-### Emsemble
 
 ## Train
+학습과정은 위에서 추론을 5번 한거와 같이 총 5개의 학습을 진행했습니다.
+가장 먼저 학습을 진행하기전, 데이터증강을 위한 코드입니다.
+이 과정을 통하여 나온결과는 드라이브에 동일하게 포함되어 있습니다.
 ### Data_Augmentation
+1. llama증강
+```bash 
+python ./data_augmentation/llama_augmentation.py
+```
+2. gemma증강
+```bash
+python ./data_augmentation/gemma_augmentation.py
+```
 ### train_full_text
+train.csv를 sliding window를 활용하여 학습하는 코드입니다.
+```bash
+python ./train/train_full_text.py
+```
 ### train_Augmentation
+증강한 데이터셋(llama, gemma)를 학습하는 코드입니다.
+```bash
+python ./train/train_main.py \
+    --train_csv ./data/train_llama.csv \
+    --save_dir ./ckpt/llama \
+    --sampling 18000 39000
+```
+```bash
+python ./train/train_main.py \
+    --train_csv ./data/train_gemma.csv \
+    --save_dir ./ckpt/gemma
+```
 ### train_sudo_labeling
+sliding window를 진행한 모델로 수도라벨링 데이터셋을 학습하는 코드입니다.
+```bash
+python ./train/train_sudo_labeling.py \
+    --train_csv ./data/train_sudo_label.csv \
+    --sampling True \
+    --save_dir ./ckpt/train_sudo 
+```
+sliding window를 학습한 모델에 이어서 수도라벨링 데이터셋을 학습하는 코드입니다.
+```bash
+python ./train/train_sudo_labeling_custom.py \
+    --save_dir ./ckpt/train_sudo_custom
+```

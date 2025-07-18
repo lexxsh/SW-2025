@@ -33,7 +33,7 @@ def main(args):
 
     print(f"4. 최종 앙상블 결과를 '{args.output_csv}' 파일로 저장합니다.")
     submission_df.to_csv(
-        f"/shared/home/kdd/HZ/sw/Z_ensembled/{args.output_csv}", index=False
+        f"./submission/{args.output_csv}", index=False
     )
     print("✅ 앙상블 완료!")
 

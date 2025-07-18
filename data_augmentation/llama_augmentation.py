@@ -16,7 +16,7 @@ import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from tqdm import tqdm 
 
-MODEL_PATH = "/raid/HZ/HZ-sw/llama"
+MODEL_PATH = "SEOKDONG/llama3.1_korean_v1.1_sft_by_aidx"
 BATCH_SIZE = 32
 INPUT_CSV = "train_human_paragraphs.csv"
 NUM_SAMPLES = 5  # 450000
