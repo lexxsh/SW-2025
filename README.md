@@ -1,6 +1,6 @@
 # 2025 DACON SW중심 경진대회
 ## Pretrained Checkpoint & dataset
-https://drive.google.com/drive/folders/1iSDUgYfhMp2LQU6AGOQJWPQSPcYTaSnF?usp=sharing
+https://drive.google.com/drive/folders/1iSDUgYfhMp2LQU6AGOQJWPQSPcYTaSnF?usp=sharing </br>
 Folder Structure에 맞게 정리 중,,,
 
 ## OpenSource Model
