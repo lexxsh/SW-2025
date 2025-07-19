@@ -18,8 +18,12 @@ import random
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--train_csv", type=str, default="./data/train_csv", help="Training CSV path")
-parser.add_argument("--save_dir", type=str, default="./ckpt/train_main", help="Checkpoint output dir")
+parser.add_argument(
+    "--train_csv", type=str, default="./data/train_csv", help="Training CSV path"
+)
+parser.add_argument(
+    "--save_dir", type=str, default="./ckpt/train_main", help="Checkpoint output dir"
+)
 parser.add_argument("--sampling", type=bool, default=False, help="sampling")
 args = parser.parse_args()
 
@@ -37,6 +41,7 @@ def set_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
+
 
 set_seed(42)
 
@@ -104,7 +109,6 @@ training_args = TrainingArguments(
     num_train_epochs=3,
     weight_decay=0.01,
     metric_for_best_model="AUC",
-    # save_steps=20000,
     save_strategy="epoch",
     save_total_limit=3,
     lr_scheduler_type="cosine",

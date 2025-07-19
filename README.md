@@ -21,6 +21,7 @@ SW-2025/
 │   └── 3.pt
 ├── data/               # 기존 데이터 & 증강 데이터 
 │   ├── train.csv
+│   ├── train_paragraphs_with_pseudo_label.csv
 │   ├── train_llama.csv
 │   ├── train_gemma.csv
 │   ├── test.csv
@@ -33,10 +34,13 @@ SW-2025/
 ├── inference/          # 추론 코드
 │   ├── inference_full_text.py
 │   └── inference_main.py
+├── pseudo_labeling/    # 수도 레이블링 코드
+│   └── pseudo_labeling.py
 ├── train/              # 학습 코드
 │   ├── train_full_text.py
 │   ├── train_main.py
-│   └── train_sudo_labeling.py
+│   ├── train_pseudo_labeling.py
+│   └── train_pseudo_labeling_custom.py
 └── README.md
 ```
 ## Conda Environmet
@@ -50,13 +54,14 @@ conda activate sw
 python -m pip install requirements.txt
 ```
 ## Inference & Ensemble
-1. Inference_full_test
-2. Inference_Augmetnation(llama)
-3. Inference_Augmetnation(gemma)
-4. Inference_sudo_labeling
-5. Inference_full_test+sudo_labeling 
-- 위 네가지에 대한 추론진행후 앙상블을 진행하는 파일을 쉘 스크립트를 통해 작성하였습니다.
-- 아래 명령어를 순서대로 실행시키면 됩니다.
+1. Pseudo_labeling
+2. Inference_full_text
+3. Inference_Augmetnation(llama)
+4. Inference_Augmetnation(gemma)
+5. Inference_pseudo_labeling
+6. Inference_full_text + pseudo_labeling 
+- 추론 수행 후 앙상블을 진행하는 파일을 쉘 스크립트를 통해 작성하였습니다.
+- 아래 명령어를 실행시키면 됩니다.
 
 ```bash
 chmod +x ./scripts/inference.sh
@@ -101,17 +106,17 @@ python ./train/train_main.py \
     --train_csv ./data/train_gemma.csv \
     --save_dir ./ckpt/gemma
 ```
-### train_sudo_labeling
-sliding window를 진행한 모델로 수도라벨링 데이터셋을 학습하는 코드입니다.
+### train_pseudo_labeling
+수도레이블 데이터셋을 학습하는 코드입니다.
 ```bash
-python ./train/train_sudo_labeling.py \
-    --train_csv ./data/train_sudo_label.csv \
+python ./train/train_pseudo_labeling.py \
+    --train_csv ./data/train_pseudo_label.csv \
     --sampling True \
-    --save_dir ./ckpt/train_sudo 
+    --save_dir ./ckpt/train_pseudo 
 ```
 sliding window를 학습한 모델에 이어서 수도라벨링 데이터셋을 학습하는 코드입니다.
 ```bash
-python ./train/train_sudo_labeling_custom.py \
-    --train_csv ./data/train_sudo_label.csv \
-    --save_dir ./ckpt/train_sudo_custom
+python ./train/train_pseudo_labeling_custom.py \
+    --train_csv ./data/train_pseudo_label.csv \
+    --save_dir ./ckpt/train_pseudo_custom
 ```
