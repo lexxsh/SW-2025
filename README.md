@@ -24,7 +24,7 @@ SW-2025/
 │   └── 3.pt
 ├── data/               # 기존 데이터 & 증강 데이터 
 │   ├── train.csv
-│   ├── train_paragraphs_with_pseudo_label.csv
+│   ├── train_pseudo_label.csv
 │   ├── train_llama.csv
 │   ├── train_gemma.csv
 │   ├── test.csv
