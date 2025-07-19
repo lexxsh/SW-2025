@@ -38,7 +38,7 @@ parser.add_argument(
 parser.add_argument(
     "--model_ckpt",
     type=str,
-    default="./ckpt/full_text_sliding_window/epoch_1.pt",
+    default="./ckpt/full_text/epoch_1.pt",
     help="Pretrained .pt 파일 경로",
 )
 parser.add_argument(

@@ -18,7 +18,7 @@ from tqdm import tqdm
 
 MODEL_PATH = "SEOKDONG/llama3.1_korean_v1.1_sft_by_aidx"
 BATCH_SIZE = 32
-INPUT_CSV = "./data/train_human_paragraphs.csv"
+INPUT_CSV = "./data/train_paragraphs.csv"
 NUM_SAMPLES = 5  # 450000
 OUT_FULL = f"./data/train_llama.csv"
 OUT_CHANGED = f"train_generated_only_llama_3_1_8B_{NUM_SAMPLES//1000}k.csv"

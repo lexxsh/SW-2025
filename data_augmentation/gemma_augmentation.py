@@ -12,7 +12,7 @@ from tqdm import tqdm
 # --- 1. 설정값 ---
 MODEL_NAME = "rtzr/ko-gemma-2-9b-it"
 TENSOR_PARALLEL_SIZE = 1
-INPUT_CSV = "./data/train_human_paragraphs.csv"
+INPUT_CSV = "./data/train_paragraphs.csv"
 # 최종 결과 파일들
 OUTPUT_CSV_FULL_FINAL = "./data/train_gemma.csv"
 OUTPUT_CSV_GENERATED_ONLY = "./data/gemma_human_generated_only.csv"

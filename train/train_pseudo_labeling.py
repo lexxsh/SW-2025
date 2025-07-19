@@ -20,12 +20,8 @@ import random
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--train_csv", type=str, default="./data/train_csv", help="Training CSV path"
-)
-parser.add_argument(
-    "--save_dir", type=str, default="./ckpt/train_sudo", help="Checkpoint output dir"
-)
+parser.add_argument("--train_csv", type=str, default="./data/train_csv", help="Training CSV path")
+parser.add_argument("--save_dir", type=str, default="./ckpt/train_sudo", help="Checkpoint output dir")
 parser.add_argument("--sampling", type=bool, default=True, help="sampling")
 args = parser.parse_args()
 

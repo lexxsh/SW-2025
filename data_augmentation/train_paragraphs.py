@@ -24,6 +24,6 @@ exploded["generated"] = 0
 
 # 7) 원하는 컬럼만 선택(select)하고 저장(save)
 out_cols = ["title", "paragraph_index", "paragraphs", "generated"]
-exploded[out_cols].to_csv("./data/train_human_paragraphs.csv", index=False)
+exploded[out_cols].to_csv("./data/train_paragraphs.csv", index=False)
 
 print("완료! ➜ train_human_paragraphs.csv")
