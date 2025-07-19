@@ -18,7 +18,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--output_csv",
-    default="./data/train_paragraphs_with_pseudo_label.csv",
+    default="./data/train_pseudo_label.csv",
     help="결과 저장 경로",
 )
 args = parser.parse_args()
