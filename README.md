@@ -15,13 +15,13 @@ https://huggingface.co/team-lucid/deberta-v3-base-korean
 - data_augmentation 코드를 활용하여 데이터 증강을 진행했으며, 완료된 결과 또한 드라이브에 포함되어 있습니다.
 ```bash
 SW-2025/
-├── ckpt/               # weight files
+├── ckpt/                                      # weight files
 │   ├── full_text/epoch_1.pt
 │   ├── llama
 │   ├── train_pseudo
 │   ├── train_pseudo_custom
 │   └── gemma
-├── data/               # 기존 데이터 & 증강 데이터 
+├── data/                                      # 기존 데이터 & 증강 데이터 
 │   ├── train.csv
 │   ├── test.csv
 │   ├── sample_submission.csv 
@@ -29,15 +29,15 @@ SW-2025/
 │   ├── train_llama.csv
 │   ├── train_gemma.csv
 │   └── train_paragraphs_with_pseudo_label.csv 
-├── data_augmentation/  # 데이터 증강 코드
+├── data_augmentation/                         # 데이터 증강 코드
 │   └── augmentation.py
-├── emsemble/           # 앙상블 코드
+├── emsemble/                                  # 앙상블 코드
 │   ├── ensemble_2.py
 │   └── ensemble.py
-├── inference/          # 추론 코드
+├── inference/                                 # 추론 코드
 │   ├── inference_full_text.py
 │   └── inference_main.py
-├── train/              # 학습 코드
+├── train/                                     # 학습 코드
 │   ├── train_full_text.py
 │   ├── train_main.py
 │   └── train_sudo_labeling.py
