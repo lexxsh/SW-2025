@@ -38,15 +38,14 @@ SW-2025/
 │   ├── ensemble_2.py
 │   └── ensemble.py
 ├── inference/          # 추론 코드
-│   ├── inference_full_text.py
-│   ├── inference_main.py
-│   └── inference_self_training.py
+│   ├── inference_custom.py
+│   └── inference.py
 ├── pseudo_labeling/    # 수도 레이블링 코드
 │   └── pseudo_labeling.py
 ├── scripts/    # 수도 레이블링 코드
 │   └── inference.sh
 ├── train/              # 학습 코드
-│   ├── train_with_sliding_window.py
+│   ├── train_custom.py
 │   └── train.py
 └── README.md
 ```
@@ -65,8 +64,8 @@ python -m pip install requirements.txt
 2. Inference_full_text
 3. Inference_Augmetnation(llama)
 4. Inference_Augmetnation(gemma)
-5. Inference_pseudo_labeling
-6. Inference_full_text + pseudo_labeling 
+5. Inference_pseudo_label
+6. Inference_self_training
 - 추론 수행 후 앙상블을 진행하는 파일을 쉘 스크립트를 통해 작성하였습니다.
 - 아래 명령어를 실행시키면 됩니다.
 
@@ -99,7 +98,7 @@ python ./data_augmentation/gemma_augmentation.py
 ### train_full_text
 train.csv를 sliding window를 활용하여 학습하는 코드입니다.
 ```bash
-python ./train/train_with_sliding_window.py \
+python ./train/train_custom.py \
     --train_csv ./data/train.csv \
     --batch_size 16 \
     --lr 2e-5 \
