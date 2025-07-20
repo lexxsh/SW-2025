@@ -138,10 +138,6 @@ if args.sampling:
 
         pos_sents = (pos_sample["title"] + " " + pos_sample["paragraph_text"]).tolist()
         neg_sents = (neg_sample["title"] + " " + neg_sample["paragraph_text"]).tolist()
-        logger.info(
-            f"Random-sampling applied ➜ pos: {len(pos_sents)} | neg: {len(neg_sents)} "
-            f"(ratio 1:{len(neg_sents)//len(pos_sents)})"
-        )
 
     elif len(args.sampling) == 1:
         # 2) 언더샘플링: neg → args.sampling × pos 개수로 제한
@@ -151,11 +147,6 @@ if args.sampling:
         # 3) 문장·라벨 합치기
         pos_sents = (pos_df["title"] + " " + pos_df["paragraph_text"]).tolist()
         neg_sents = (neg_sample["title"] + " " + neg_sample["paragraph_text"]).tolist()
-
-        logger.info(
-            f"Under-sampling applied ➜ pos: {len(pos_sents)} | neg: {len(neg_sents)} "
-            f"(ratio 1:{len(neg_sents)//len(pos_sents)})"
-        )
 
     train_sents = pos_sents + neg_sents
     y = pd.Series([1] * len(pos_sents) + [0] * len(neg_sents)).reset_index(drop=True)
@@ -270,10 +261,7 @@ trainer = Trainer(
 # ────── 7. 학습 ──────
 trainer.train()
 
-# ────── 8. 평가 및 저장 ──────
-eval_result = trainer.evaluate()
-logger.info(f"📊 Evaluation Results: {eval_result}")
-
+os.makedirs(args.save_dir, exist_ok=True)
 trainer.save_model(args.save_dir)
 tokenizer.save_pretrained(args.save_dir)
 logger.info(f"✅ 모델 저장 완료: {args.save_dir}")

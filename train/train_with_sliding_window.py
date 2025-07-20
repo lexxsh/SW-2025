@@ -266,7 +266,6 @@ def train_sliding_window():
     print(f"\n🎉 슬라이딩 윈도우 학습 완료!")
     print(f"📁 모델 저장 위치: {save_dir}")
     print(f"🏆 Best accuracy: {best_accuracy:.4f}")
-    print(f"💡 다음 단계: 수도 라벨링을 위해 이 모델을 사용하세요")
 
     return save_dir
 
