@@ -30,15 +30,19 @@ SW-2025/
 │   ├── test.csv
 │   └── sample_submission.csv
 ├── data_augmentation/  # 데이터 증강 코드
-│   └── augmentation.py
+│   ├── gemma_augmentation.py
+│   └── llama_augmentation.py
 ├── emsemble/           # 앙상블 코드
 │   ├── ensemble_2.py
 │   └── ensemble.py
 ├── inference/          # 추론 코드
 │   ├── inference_full_text.py
-│   └── inference_main.py
+│   ├── inference_main.py
+│   └── inference_self_training.py
 ├── pseudo_labeling/    # 수도 레이블링 코드
 │   └── pseudo_labeling.py
+├── scripts/    # 수도 레이블링 코드
+│   └── inference.sh
 ├── train/              # 학습 코드
 │   ├── train_with_sliding_window.py
 │   └── train.py
