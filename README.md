@@ -163,6 +163,6 @@ python ./train/train.py \
     --drop_out 0.2 \
     --epochs 3 \
     --test_size 0.2 \
-    --seed 42
+    --seed 42 \
     --save_dir ./ckpt/self_training
 ```
