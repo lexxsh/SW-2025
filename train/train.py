@@ -5,6 +5,8 @@ train_with_pt_model.py — SimpleClassifier 기반 저장된 .pt 모델로 재�
 """
 
 import os, gc, torch, numpy as np, pandas as pd, logging, warnings
+import shutil
+from transformers import TrainerCallback
 from tqdm.auto import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
@@ -120,8 +122,31 @@ def set_seed(seed):
 
 set_seed(args.seed)
 
+
+class EpochCheckpointRenamer(TrainerCallback):
+    def on_save(self, args, state, control, **kwargs):
+        """
+        Called right after a checkpoint is saved.
+        Rename checkpoint-{global_step} → checkpoint_{epoch}.
+        """
+        if args.save_strategy == "epoch":
+            last_ckpt_dir = os.path.join(
+                args.output_dir, f"checkpoint-{state.global_step}"
+            )
+            new_ckpt_dir = os.path.join(
+                args.output_dir, f"checkpoint_{int(state.epoch)}"
+            )
+
+            if os.path.exists(last_ckpt_dir):
+                if os.path.exists(new_ckpt_dir):
+                    shutil.rmtree(new_ckpt_dir)  # 기존 epoch 폴더 삭제
+                os.rename(last_ckpt_dir, new_ckpt_dir)
+                print(f"[INFO] Checkpoint renamed: {last_ckpt_dir} → {new_ckpt_dir}")
+
+
 # ────── 2. 데이터 로드 및 전처리 ──────
 train = pd.read_csv(args.train_csv, encoding="utf-8-sig")
+train = train.head(100)
 
 if "paragraphs" in train.columns:
     train = train.rename(columns={"paragraphs": "paragraph_text"})
@@ -244,7 +269,7 @@ training_args = TrainingArguments(
     weight_decay=args.weight_decay,
     metric_for_best_model="AUC",
     save_strategy="epoch",
-    save_total_limit=3,
+    save_total_limit=None,
     lr_scheduler_type=args.scheduler_type,
 )
 
@@ -256,12 +281,13 @@ trainer = Trainer(
     eval_dataset=val_ds,
     data_collator=data_collator,
     compute_metrics=compute_metrics,
+    callbacks=[EpochCheckpointRenamer()],
 )
 
 # ────── 7. 학습 ──────
 trainer.train()
 
-os.makedirs(args.save_dir, exist_ok=True)
-trainer.save_model(args.save_dir)
-tokenizer.save_pretrained(args.save_dir)
+# os.makedirs(args.save_dir, exist_ok=True)
+# trainer.save_model(args.save_dir)
+# tokenizer.save_pretrained(args.save_dir)
 logger.info(f"✅ 모델 저장 완료: {args.save_dir}")

@@ -12,23 +12,23 @@ python ./inference/inference_full_text.py \
 # 3) Inference_Augmentation
 echo ">>> Running inference augmentation..."
 python ./inference/inference_main.py \
-    --model_path ./ckpt/llama \
+    --model_path ./ckpt/llama/checkpoint_2 \
     --output_csv submission_llama.csv
 
 python ./inference/inference_main.py \
-    --model_path ./ckpt/gemma \
+    --model_path ./ckpt/gemma/checkpoint_2 \
     --output_csv submission_gemma.csv
 
 # 4) Inference_pseudo_labeling
 echo ">>> Running inference for pseudo labeling..."
 python ./inference/inference_main.py \
-    --model_path ./ckpt/train_pseudo \
+    --model_path ./ckpt/train_pseudo/checkpoint_1 \
     --output_csv submission_train_pseudo.csv
 
 # 5) Self-Training Inference
 echo ">>> Running self-training inference..."
 python ./inference/inference_self_training.py \
-    --model_path ./ckpt/self_training/ \
+    --model_path ./ckpt/self_training/checkpoint_1 \
     --output_csv submission_self_training.csv
 
 echo ">>> All inference jobs completed!"
