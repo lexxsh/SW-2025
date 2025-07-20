@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-train_with_pt_model.py — SimpleClassifier 기반 저장된 .pt 모델로 재학습
-"""
-
 import os, gc, torch, numpy as np, pandas as pd, logging, warnings
 import shutil
 from transformers import TrainerCallback
@@ -45,7 +39,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--sampling",
-    nargs="+",  # 1개 이상 인자 허용
+    nargs="+",
     type=int,
     default=None,
     help="Sampling strategy: "
@@ -139,7 +133,7 @@ class EpochCheckpointRenamer(TrainerCallback):
 
             if os.path.exists(last_ckpt_dir):
                 if os.path.exists(new_ckpt_dir):
-                    shutil.rmtree(new_ckpt_dir)  # 기존 epoch 폴더 삭제
+                    shutil.rmtree(new_ckpt_dir)
                 os.rename(last_ckpt_dir, new_ckpt_dir)
                 print(f"[INFO] Checkpoint renamed: {last_ckpt_dir} → {new_ckpt_dir}")
 
@@ -164,11 +158,9 @@ if args.sampling:
         neg_sents = (neg_sample["title"] + " " + neg_sample["paragraph_text"]).tolist()
 
     elif len(args.sampling) == 1:
-        # 2) 언더샘플링: neg → args.sampling × pos 개수로 제한
         target_neg = min(len(neg_df), args.sampling[0] * len(pos_df))
         neg_sample = neg_df.sample(n=target_neg, random_state=42)
 
-        # 3) 문장·라벨 합치기
         pos_sents = (pos_df["title"] + " " + pos_df["paragraph_text"]).tolist()
         neg_sents = (neg_sample["title"] + " " + neg_sample["paragraph_text"]).tolist()
 
@@ -228,7 +220,6 @@ class SimpleClassifier(nn.Module):
         return {"logits": logits}
 
 
-# HuggingFace Trainer와 호환되게 감싸기
 class WrappedClassifier(SimpleClassifier):
     def forward(self, input_ids=None, attention_mask=None, labels=None):
         output = super().forward(input_ids, attention_mask, labels)
@@ -238,7 +229,6 @@ class WrappedClassifier(SimpleClassifier):
         )
 
 
-# 모델 로드
 if args.model_ckpt:
     model = WrappedClassifier(MODEL_ID).to(DEVICE)
     ckpt = torch.load(args.model_ckpt, map_location=DEVICE)
@@ -285,8 +275,4 @@ trainer = Trainer(
 
 # ────── 7. 학습 ──────
 trainer.train()
-
-# os.makedirs(args.save_dir, exist_ok=True)
-# trainer.save_model(args.save_dir)
-# tokenizer.save_pretrained(args.save_dir)
 logger.info(f"✅ 모델 저장 완료: {args.save_dir}")

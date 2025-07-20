@@ -1,7 +1,3 @@
-"""
-inference.py — 파인튜닝된 DeBERTa 모델로 테스트셋 추론 & 제출 파일 생성
-"""
-
 import os, torch, numpy as np, pandas as pd, logging, warnings
 from transformers import (
     AutoTokenizer,
@@ -12,6 +8,7 @@ from transformers import (
 from datasets import Dataset
 import argparse
 
+# ────── 0. Argument 파싱 ──────
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", required=True, help="모델 체크포인트(.pt) 경로")
 parser.add_argument(
@@ -19,12 +16,13 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+# ───────────── 1. 설정 ─────────────
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 warnings.filterwarnings("ignore")
 
 DEVICE = torch.device("cuda")
-MODEL_DIR = args.model_path  # train.py에서 저장된 경로
+MODEL_DIR = args.model_path
 MAX_LEN, BATCH_SIZE = 512, 4
 
 test = pd.read_csv("./data/test.csv", encoding="utf-8-sig")

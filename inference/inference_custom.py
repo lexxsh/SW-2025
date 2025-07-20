@@ -1,7 +1,3 @@
-"""
-inference.py — 슬라이딩 윈도우 기반 학습 모델(SimpleClassifier)로 테스트셋 추론
-"""
-
 import os, torch, numpy as np, pandas as pd, logging, warnings
 from transformers import AutoTokenizer, AutoModel, DataCollatorWithPadding
 from torch.utils.data import Dataset, DataLoader
@@ -10,6 +6,7 @@ import argparse
 from tqdm import tqdm
 from safetensors.torch import load_file
 
+# ────── 0. Argument 파싱 ──────
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", required=True, help="모델 체크포인트(.pt) 경로")
 parser.add_argument("--torch", type=bool, help="torch 사용 유무")
@@ -21,6 +18,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+# ───────────── 1. 설정 ─────────────
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MODEL_NAME = "team-lucid/deberta-v3-base-korean"
 MAX_LEN, BATCH_SIZE = 512, 4
