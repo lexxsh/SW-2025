@@ -50,6 +50,7 @@ data_collator = DataCollatorWithPadding(tokenizer)
 
 # ────────────────────── 3. 모델 로드 ──────────────────────
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_DIR).to(DEVICE)
+model.eval()
 
 trainer = Trainer(
     model=model,

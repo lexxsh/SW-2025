@@ -18,7 +18,7 @@ set -euo pipefail
 
 # 3) Inference_pseudo_labeling
 echo ">>> Running inference for pseudo labeling..."
-python ./inference/inference_custom.py \
+python ./inference/inference.py \
     --model_path ./ckpt/train_pseudo/checkpoint_1 \
     --output_csv ./submission/submission_train_pseudo.csv
 
