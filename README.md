@@ -23,7 +23,7 @@ SW-2025/
 │   ├── gemma
 │   │   └── checkpoint_2
 │   ├── llama
-│   │   └── checkpoint_2
+│   │   └── checkpoint_3
 │   ├── self_training
 │   │   └── checkpoint_1
 │   └── train_pseudo
@@ -92,7 +92,6 @@ python ./data_augmentation/train_paragraphs.py
 2. llama증강
 ```bash 
 python ./data_augmentation/llama_augmentation.py \
-    --num_samples 450000
 ```
 3. gemma증강
 ```bash
