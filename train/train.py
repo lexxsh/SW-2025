@@ -146,7 +146,6 @@ class EpochCheckpointRenamer(TrainerCallback):
 
 # ────── 2. 데이터 로드 및 전처리 ──────
 train = pd.read_csv(args.train_csv, encoding="utf-8-sig")
-train = train.head(100)
 
 if "paragraphs" in train.columns:
     train = train.rename(columns={"paragraphs": "paragraph_text"})
