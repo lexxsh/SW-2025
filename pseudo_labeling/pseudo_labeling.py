@@ -10,7 +10,7 @@ from tqdm import tqdm
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "--model_path",
-    default="./ckpt/full_text_sliding_window/epoch_1.pt",
+    default="./ckpt/full_text/epoch_1.pt",
     help="모델 체크포인트(.pt) 경로",
 )
 parser.add_argument(

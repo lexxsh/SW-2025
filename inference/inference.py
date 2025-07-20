@@ -14,7 +14,9 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model_path", required=True, help="모델 체크포인트(.pt) 경로")
-parser.add_argument("--output_csv", default="./submission/submission_main.csv", help="결과 저장 경로")
+parser.add_argument(
+    "--output_csv", default="./submission/submission_main.csv", help="결과 저장 경로"
+)
 args = parser.parse_args()
 
 logging.basicConfig(level=logging.INFO)
@@ -60,12 +62,10 @@ test_logits = trainer.predict(test_ds).predictions
 test_probs = torch.softmax(torch.tensor(test_logits), dim=1)[:, 1].numpy()
 
 # ────────────────────── 5. 제출 파일 저장 ──────────────────────
-sub = pd.read_csv(
-    "./data/sample_submission.csv", encoding="utf-8-sig"
-)
+sub = pd.read_csv("./data/sample_submission.csv", encoding="utf-8-sig")
 sub["generated"] = test_probs
 sub.to_csv(
-    f"./submission/{args.output_csv}",
+    args.output_csv,
     index=False,
     encoding="utf-8-sig",
 )

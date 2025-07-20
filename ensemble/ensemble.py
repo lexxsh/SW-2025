@@ -32,9 +32,7 @@ def main(args):
     submission_df = ensemble_df[["ID", "generated"]]
 
     print(f"4. 최종 앙상블 결과를 '{args.output_csv}' 파일로 저장합니다.")
-    submission_df.to_csv(
-        f"./submission/{args.output_csv}", index=False
-    )
+    submission_df.to_csv(args.output_csv, index=False)
     print("✅ 앙상블 완료!")
 
 
