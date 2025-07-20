@@ -1,11 +1,5 @@
-"""
-Paragraph-level style-transfer & augmentation
---------------------------------------------
-* 입력 CSV  : title, paragraph_index, paragraph_text, generated
-* 출력 CSV 1: 전체 데이터(바뀐 행은 generated=1)  → train_generated_llama_3_1_8B_0k.csv
-* 출력 CSV 2: 새로 생성된 행만               → generated_only_llama_3_1_8B_0k.csv
-* 모델      : 로컬 경로 /raid/HZ/HZ-sw/llama (decoder-only, left-padding)
-"""
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os, re, random, logging, warnings
 from pathlib import Path
@@ -14,27 +8,29 @@ import numpy as np
 import pandas as pd
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from tqdm import tqdm
-import argparse
+from tqdm import tqdm  # ← tqdm 추가
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--num_samples",
-    type=int,
-    default=450000,
-)
-args = parser.parse_args()
 
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+
+set_seed(42)
+
+# ─────────────────────── 1. 설정 ──────────────────────────────────────────────
 MODEL_PATH = "SEOKDONG/llama3.1_korean_v1.1_sft_by_aidx"
 BATCH_SIZE = 32
-INPUT_CSV = "train_human_paragraphs.csv"
-NUM_SAMPLES = args.num_samples  # 450000
+INPUT_CSV = "./data/train_human_paragraphs.csv"
+NUM_SAMPLES = 18036
 OUT_FULL = f"./data/train_llama.csv"
 OUT_CHANGED = f"./data/train_generated_only_llama_3_1_8B_{NUM_SAMPLES//1000}k.csv"
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-
+# ─────────────────────── 2. 프롬프트 템플릿 ────────────────────────────────────
 PROMPTS = {
     "narrative_essay": """<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
@@ -91,59 +87,27 @@ model = (
     .eval()
 )
 
-torch.backends.cuda.matmul.allow_tf32 = True
-model = torch.compile(model, mode="reduce-overhead", fullgraph=True)
-
 
 # ─────────────────────── 4. 헬퍼 ──────────────────────────────────────────────
-# def generate_batch(prompts, max_tokens=256, temperature=0.7, top_p=0.95):
-#     """HF 모델 배치 생성 → list[str]"""
-#     enc = tokenizer(prompts, return_tensors="pt", padding=True, truncation=True).to(
-#         DEVICE
-#     )
-#     with torch.no_grad():
-#         out = model.generate(
-#             **enc,
-#             max_new_tokens=max_tokens,
-#             do_sample=True,
-#             temperature=temperature,
-#             top_p=top_p,
-#             eos_token_id=tokenizer.eos_token_id,
-#             pad_token_id=tokenizer.eos_token_id,
-#         )
-#     prompt_len = enc["input_ids"].shape[1]
-#     txt = tokenizer.batch_decode(out[:, prompt_len:], skip_special_tokens=True)
-#     return [re.split(r"<\|eot_id\|>|<\|end_of_text\|>", t)[0].strip() for t in txt]
-
-# ───────── vLLM 전용 초기화 ─────────
-from vllm import LLM, SamplingParams
-
-llm = LLM(
-    model=MODEL_PATH,  # /raid/HZ/HZ-sw/llama
-    tokenizer=MODEL_PATH,
-    dtype="float16",
-    tensor_parallel_size=1,  # 다중 GPU면 >1
-    gpu_memory_utilization=0.90,  # OOM 방지용
-)
-
-
-# ───────── vLLM 버전 generate_batch ─────────
 def generate_batch(prompts, max_tokens=256, temperature=0.7, top_p=0.95):
-    """
-    vLLM 배치 생성 → list[str]
-    """
-    sampling_params = SamplingParams(
-        max_tokens=max_tokens,
-        temperature=temperature,
-        top_p=top_p,
-        stop=["<|eot_id|>", "<|end_of_text|>"],  # 모델 특수토큰
+    """HF 모델 배치 생성 → list[str]"""
+    enc = tokenizer(prompts, return_tensors="pt", padding=True, truncation=True).to(
+        DEVICE
     )
 
-    # vLLM은 입력 순서를 보장하려면 request_id 사용 or 정렬 필요
-    outs = llm.generate(prompts, sampling_params)
-    # RequestOutput.id는 0,1,2,… 순으로 들어오므로 정렬 후 추출
-    outs_sorted = sorted(outs, key=lambda o: o.request_id)
-    return [o.outputs[0].text.strip() for o in outs_sorted]
+    with torch.no_grad():
+        out = model.generate(
+            **enc,
+            max_new_tokens=max_tokens,
+            do_sample=True,
+            temperature=temperature,
+            top_p=top_p,
+            eos_token_id=tokenizer.eos_token_id,
+            pad_token_id=tokenizer.eos_token_id,
+        )
+    prompt_len = enc["input_ids"].shape[1]
+    txt = tokenizer.batch_decode(out[:, prompt_len:], skip_special_tokens=True)
+    return [re.split(r"<\|eot_id\|>|<\|end_of_text\|>", t)[0].strip() for t in txt]
 
 
 # ─────────────────────── 5. 데이터 읽기 & 샘플 ─────────────────────────────────
@@ -179,11 +143,10 @@ for s_idx, style in enumerate(STYLE_LIST):
     log.info(f"🚀 프롬프트 {len(prompts)}개 → LLM")
 
     generated = []
-    # tqdm ─ 생성 배치 진행률 표시
+
     for st in tqdm(range(0, len(prompts), BATCH_SIZE), desc=f"{style} gen"):
         generated += generate_batch(prompts[st : st + BATCH_SIZE])
 
-    # 결과 반영 → tqdm 상태바
     for (_, orig), gen_text in tqdm(
         zip(rows_slice.iterrows(), generated),
         total=len(rows_slice),
@@ -195,15 +158,6 @@ for s_idx, style in enumerate(STYLE_LIST):
         df.at[row_idx, "generated"] = 1
         changed_rows.append(df.loc[[row_idx]])
 
-    log.info("\n💾 임시 CSV 저장")
-    if changed_rows:
-        pd.concat(changed_rows).to_csv(OUT_CHANGED, index=False, encoding="utf-8-sig")
-        log.info(f"임시 변환 행 {len(changed_rows)}개 → {OUT_CHANGED}")
-    else:
-        log.info("임시 변환된 행 없음")
-
-    df.to_csv(OUT_FULL, index=False, encoding="utf-8-sig")
-    log.info(f"임시 파일 → {OUT_FULL}")
     log.info("✅ 완료")
 
 # ─────────────────────── 7. 저장 ──────────────────────────────────────────────
