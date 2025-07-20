@@ -60,12 +60,11 @@ conda activate sw
 python -m pip install requirements.txt
 ```
 ## Inference & Ensemble
-1. Pseudo_labeling
-2. Inference_full_text
-3. Inference_Augmetnation(llama)
-4. Inference_Augmetnation(gemma)
-5. Inference_pseudo_label
-6. Inference_self_training
+1. Inference_full_text
+2. Inference_Augmetnation(llama)
+3. Inference_Augmetnation(gemma)
+4. Inference_pseudo_label
+5. Inference_self_training
 - 추론 수행 후 앙상블을 진행하는 파일을 쉘 스크립트를 통해 작성하였습니다.
 - 아래 명령어를 실행시키면 됩니다.
 
@@ -105,6 +104,11 @@ python ./train/train_custom.py \
     --epochs 3 \
     --seed 42 \
     --save_dir ./ckpt/full_text
+```
+### pseudo_labeling
+사전학습 된 모델을 활용하여 수도 레이블링하는 코드입니다.
+```bash
+python ./pseudo_labeling/pseudo_labeling.py
 ```
 ### train_Augmentation
 증강한 데이터셋(llama, gemma)를 학습하는 코드입니다.
