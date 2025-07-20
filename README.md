@@ -42,7 +42,7 @@ SW-2025/
 │   └── inference.py
 ├── pseudo_labeling/    # 수도 레이블링 코드
 │   └── pseudo_labeling.py
-├── scripts/    # 수도 레이블링 코드
+├── scripts/            # 추론 스크립트
 │   └── inference.sh
 ├── train/              # 학습 코드
 │   ├── train_custom.py
