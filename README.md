@@ -100,7 +100,6 @@ python ./train/train_with_sliding_window.py \
     --epochs 3 \
     --seed 42 \
     --save_dir ./ckpt/full_text
-
 ```
 ### train_Augmentation
 증강한 데이터셋(llama, gemma)를 학습하는 코드입니다.
