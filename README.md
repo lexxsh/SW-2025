@@ -51,7 +51,8 @@ SW-2025/
 ├── train/              # 학습 코드
 │   ├── train_custom.py
 │   └── train.py
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 ## Conda Environmet
 
@@ -109,7 +110,7 @@ python ./train/train_custom.py \
     --save_dir ./ckpt/full_text
 ```
 ### pseudo_labeling
-사전학습 된 모델을 활용하여 수도 레이블링하는 코드입니다.
+파인튜닝 모델을 활용하여 수도 레이블링하는 코드입니다.
 ```bash
 python ./pseudo_labeling/pseudo_labeling.py
 ```
@@ -161,7 +162,7 @@ python ./train/train.py \
     --save_dir ./ckpt/train_pseudo
 
 ```
-sliding window를 학습한 모델에 이어서 수도라벨링 데이터셋을 학습(Self-Training)하는 코드입니다.
+sliding window로 학습한 모델에 이어서 수도레이블 데이터셋을 학습(Self-Training)하는 코드입니다.
 ```bash
 python ./train/train.py \
     --train_csv ./data/train_pseudo_label.csv \
