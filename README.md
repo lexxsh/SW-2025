@@ -1,7 +1,6 @@
 # 2025 DACON SW중심 경진대회
 ## Pretrained Checkpoint & dataset
 https://drive.google.com/drive/folders/1iSDUgYfhMp2LQU6AGOQJWPQSPcYTaSnF?usp=sharing </br>
-Folder Structure에 맞게 정리 중,,,
 
 ## OpenSource Model
 데이터 증강 & 학습시 사용한 모델은 다음과 같습니다.
@@ -20,10 +19,15 @@ https://huggingface.co/team-lucid/deberta-v3-base-korean
 SW-2025/
 ├── ckpt/               # weight files
 │   ├── full_text
+│   │   └── epoch_1.pt
 │   ├── gemma
+│   │   └── checkpoint_2
 │   ├── llama
+│   │   └── checkpoint_2
 │   ├── self_training
+│   │   └── checkpoint_1
 │   └── train_pseudo
+│       └── checkpoint_1
 ├── data/               # 기존 데이터 & 증강 데이터 
 │   ├── train.csv
 │   ├── train_pseudo_label.csv
