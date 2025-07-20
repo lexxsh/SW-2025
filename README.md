@@ -19,9 +19,11 @@ https://huggingface.co/team-lucid/deberta-v3-base-korean
 ```bash
 SW-2025/
 ├── ckpt/               # weight files
-│   ├── 1.pt
-│   ├── 2.pt
-│   └── 3.pt
+│   ├── full_text
+│   ├── gemma
+│   ├── llama
+│   ├── self_training
+│   └── train_pseudo
 ├── data/               # 기존 데이터 & 증강 데이터 
 │   ├── train.csv
 │   ├── train_pseudo_label.csv
