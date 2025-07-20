@@ -7,6 +7,47 @@ import torch.nn as nn
 from tqdm import tqdm
 import random
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--train_csv",
+    type=str,
+    default="./data/train.csv",
+    help="Training CSV path",
+)
+parser.add_argument(
+    "--save_dir",
+    type=str,
+    default="./ckpt/full_text",
+    help="Checkpoint output dir",
+)
+parser.add_argument(
+    "--batch_size",
+    type=int,
+    default=16,
+    help="Batch size",
+)
+parser.add_argument(
+    "--lr",
+    type=float,
+    default=2e-5,
+    help="Learning late",
+)
+parser.add_argument(
+    "--epochs",
+    type=int,
+    default=3,
+    help="Epochs",
+)
+parser.add_argument(
+    "--seed",
+    type=int,
+    default=42,
+    help="Seed",
+)
+args = parser.parse_args()
+
 
 def set_seed(seed):
     random.seed(seed)
@@ -15,20 +56,21 @@ def set_seed(seed):
     torch.cuda.manual_seed_all(seed)
 
 
-set_seed(42)
+set_seed(args.seed)
 
 model_name = "team-lucid/deberta-v3-base-korean"
-train_csv_path = "./data/train.csv"
-batch_size = 16
-lr = 2e-5
-epochs = 3
+train_csv_path = args.train_csv
+batch_size = args.batch_size
+lr = args.lr
+epochs = args.epochs
 max_length = 512
-window_size = 400 
+window_size = 400
 overlap = 100
 
 device_num = 0
 device = torch.device(f"cuda:{device_num}" if torch.cuda.is_available() else "cpu")
 print(f"✅ Using device: {device}")
+
 
 def sliding_window_split(text, tokenizer, window_size=400, overlap=100):
     """텍스트를 슬라이딩 윈도우로 분할"""
@@ -51,6 +93,7 @@ def sliding_window_split(text, tokenizer, window_size=400, overlap=100):
         start += window_size - overlap
 
     return windows
+
 
 class SlidingWindowDataset(Dataset):
     """슬라이딩 윈도우 학습용 데이터셋"""
@@ -93,6 +136,7 @@ class SlidingWindowDataset(Dataset):
         label = torch.tensor(self.labels[idx], dtype=torch.float32)
         return input_ids, attention_mask, label
 
+
 class SimpleClassifier(nn.Module):
     def __init__(self, model_name):
         super().__init__()
@@ -108,6 +152,7 @@ class SimpleClassifier(nn.Module):
         h = self.norm(cls_token)
         h = self.drop(h)
         return self.fc(h).squeeze(-1)
+
 
 def run_epoch(model, dataloader, optimizer, criterion):
     model.train()
@@ -138,6 +183,7 @@ def run_epoch(model, dataloader, optimizer, criterion):
 
     return avg_loss, accuracy
 
+
 def train_sliding_window():
     print("🚀 RoBERTa-Base 슬라이딩 윈도우 학습 시작!")
 
@@ -153,15 +199,6 @@ def train_sliding_window():
     # 데이터셋 생성
     train_ds = SlidingWindowDataset(df, tokenizer, window_size, overlap)
 
-    # 메모리 절약을 위한 샘플링 (선택사항)
-    max_windows = 3000000000  # 최대 윈도우 수 제한
-    if len(train_ds) > max_windows:
-        print(f"⚠️  Too many windows ({len(train_ds)}), sampling to {max_windows}")
-        indices = random.sample(range(len(train_ds)), max_windows)
-        train_ds.windows = [train_ds.windows[i] for i in indices]
-        train_ds.labels = [train_ds.labels[i] for i in indices]
-        print(f"✅ Sampled to {len(train_ds)} windows")
-
     # DataLoader
     train_dl = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True, pin_memory=True, num_workers=2
@@ -173,7 +210,7 @@ def train_sliding_window():
     criterion = nn.BCEWithLogitsLoss()
 
     # 저장 디렉토리
-    save_dir = "./ckpt/full_text"
+    save_dir = args.save_dir
     os.makedirs(save_dir, exist_ok=True)
 
     print(f"🔥 Training started with {len(train_ds)} windows")

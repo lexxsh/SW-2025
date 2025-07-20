@@ -25,11 +25,11 @@ python ./inference/inference_main.py \
     --model_path ./ckpt/train_pseudo \
     --output_csv submission_train_pseudo.csv
 
-# 5) Custom Inference
-echo ">>> Running custom inference..."
-python ./inference/inference_custom.py \
-    --model_path ./ckpt/train_pseudo_custom/ \
-    --output_csv submission_train_pseudo_custom.csv
+# 5) Self-Training Inference
+echo ">>> Running self-training inference..."
+python ./inference/inference_self_training.py \
+    --model_path ./ckpt/self_training/ \
+    --output_csv submission_self_training.csv
 
 echo ">>> All inference jobs completed!"
 
@@ -40,7 +40,7 @@ python ./ensemble/ensemble_2.py \
     ./submission/submission_llama.csv \
     ./submission/submission_gemma.csv \
     ./submission/submission_train_pseudo.csv \
-    ./submission/submission_train_pseudo_custom.csv \
+    ./submission/submission_self_training.csv \
     --output_csv final_ensemble.csv
 
 echo ">>> All finish!!!"

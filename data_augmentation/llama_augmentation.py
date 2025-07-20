@@ -1,7 +1,7 @@
 """
 Paragraph-level style-transfer & augmentation
 --------------------------------------------
-* 입력 CSV  : title, paragraph_index, paragraphs, generated
+* 입력 CSV  : title, paragraph_index, paragraph_text, generated
 * 출력 CSV 1: 전체 데이터(바뀐 행은 generated=1)  → train_generated_llama_3_1_8B_0k.csv
 * 출력 CSV 2: 새로 생성된 행만               → generated_only_llama_3_1_8B_0k.csv
 * 모델      : 로컬 경로 /raid/HZ/HZ-sw/llama (decoder-only, left-padding)
@@ -14,14 +14,23 @@ import numpy as np
 import pandas as pd
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-from tqdm import tqdm 
+from tqdm import tqdm
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--num_samples",
+    type=int,
+    default=450000,
+)
+args = parser.parse_args()
 
 MODEL_PATH = "SEOKDONG/llama3.1_korean_v1.1_sft_by_aidx"
 BATCH_SIZE = 32
 INPUT_CSV = "train_human_paragraphs.csv"
-NUM_SAMPLES = 5  # 450000
-OUT_FULL = f"train_generated_llama_3_1_8B_{NUM_SAMPLES//1000}k.csv"
-OUT_CHANGED = f"train_generated_only_llama_3_1_8B_{NUM_SAMPLES//1000}k.csv"
+NUM_SAMPLES = args.num_samples  # 450000
+OUT_FULL = f"./data/train_llama.csv"
+OUT_CHANGED = f"./data/train_generated_only_llama_3_1_8B_{NUM_SAMPLES//1000}k.csv"
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -164,7 +173,7 @@ for s_idx, style in enumerate(STYLE_LIST):
         continue
 
     prompts = [
-        PROMPTS[style].format(paragraph=r["paragraphs"])
+        PROMPTS[style].format(paragraph=r["paragraph_text"])
         for _, r in rows_slice.iterrows()
     ]
     log.info(f"🚀 프롬프트 {len(prompts)}개 → LLM")
@@ -182,7 +191,7 @@ for s_idx, style in enumerate(STYLE_LIST):
         leave=False,
     ):
         row_idx = orig["index"]
-        df.at[row_idx, "paragraphs"] = gen_text
+        df.at[row_idx, "paragraph_text"] = gen_text
         df.at[row_idx, "generated"] = 1
         changed_rows.append(df.loc[[row_idx]])
 

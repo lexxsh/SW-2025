@@ -40,10 +40,8 @@ SW-2025/
 ├── pseudo_labeling/    # 수도 레이블링 코드
 │   └── pseudo_labeling.py
 ├── train/              # 학습 코드
-│   ├── train_full_text.py
-│   ├── train_main.py
-│   ├── train_pseudo_labeling.py
-│   └── train_pseudo_labeling_custom.py
+│   ├── train_with_sliding_window.py
+│   └── train.py
 └── README.md
 ```
 ## Conda Environmet
@@ -85,7 +83,8 @@ python ./data_augmentation/train_paragraphs.py
 ```
 2. llama증강
 ```bash 
-python ./data_augmentation/llama_augmentation.py
+python ./data_augmentation/llama_augmentation.py \
+    --num_samples 450000
 ```
 3. gemma증강
 ```bash
@@ -94,32 +93,76 @@ python ./data_augmentation/gemma_augmentation.py
 ### train_full_text
 train.csv를 sliding window를 활용하여 학습하는 코드입니다.
 ```bash
-python ./train/train_full_text.py
+python ./train/train_with_sliding_window.py \
+    --train_csv ./data/train.csv \
+    --batch_size 16 \
+    --lr 2e-5 \
+    --epochs 3 \
+    --seed 42 \
+    --save_dir ./ckpt/full_text
+
 ```
 ### train_Augmentation
 증강한 데이터셋(llama, gemma)를 학습하는 코드입니다.
 ```bash
-python ./train/train_main.py \
+python ./train/train.py \
     --train_csv ./data/train_llama.csv \
-    --save_dir ./ckpt/llama \
-    --sampling 18000 39000
+    --sampling 18000 39000 \
+    --batch_size 4 \
+    --lr 1e-5 \
+    --scheduler_type cosine \
+    --weight_decay 0.01 \
+    --drop_out 0.2 \
+    --epochs 3 \
+    --test_size 0.2 \
+    --seed 42 \
+    --save_dir ./ckpt/llama
+
 ```
 ```bash
-python ./train/train_main.py \
+python ./train/train.py \
     --train_csv ./data/train_gemma.csv \
+    --batch_size 4 \
+    --lr 1e-5 \
+    --scheduler_type cosine \
+    --weight_decay 0.01 \
+    --drop_out 0.2 \
+    --epochs 3 \
+    --test_size 0.2 \
+    --seed 42 \
     --save_dir ./ckpt/gemma
+
 ```
 ### train_pseudo_labeling
 수도레이블 데이터셋을 학습하는 코드입니다.
 ```bash
-python ./train/train_pseudo_labeling.py \
+python ./train/train.py \
     --train_csv ./data/train_pseudo_label.csv \
-    --sampling True \
-    --save_dir ./ckpt/train_pseudo 
+    --model_ckpt ./ckpt/full_text/epoch_1.pt \
+    --sampling 6 \
+    --batch_size 4 \
+    --lr 1e-5 \
+    --scheduler_type cosine \
+    --weight_decay 0.01 \
+    --drop_out 0.2 \
+    --epochs 3 \
+    --test_size 0.2 \
+    --seed 42 \
+    --save_dir ./ckpt/train_pseudo
+
 ```
-sliding window를 학습한 모델에 이어서 수도라벨링 데이터셋을 학습하는 코드입니다.
+sliding window를 학습한 모델에 이어서 수도라벨링 데이터셋을 학습(Self-Training)하는 코드입니다.
 ```bash
-python ./train/train_pseudo_labeling_custom.py \
+python ./train/train.py \
     --train_csv ./data/train_pseudo_label.csv \
-    --save_dir ./ckpt/train_pseudo_custom
+    --model_ckpt ./ckpt/full_text/epoch_1.pt \
+    --batch_size 4 \
+    --lr 1e-5 \
+    --scheduler_type cosine \
+    --weight_decay 0.01 \
+    --drop_out 0.2 \
+    --epochs 3 \
+    --test_size 0.2 \
+    --seed 42
+    --save_dir ./ckpt/self_training
 ```
