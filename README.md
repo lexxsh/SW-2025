@@ -146,7 +146,6 @@ python ./train/train.py \
 ```bash
 python ./train/train.py \
     --train_csv ./data/train_pseudo_label.csv \
-    --model_ckpt ./ckpt/full_text/epoch_1.pt \
     --sampling 6 \
     --batch_size 4 \
     --lr 1e-5 \
